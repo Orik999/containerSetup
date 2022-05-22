@@ -6,7 +6,7 @@ printf '\nWARNING: run this script only once a user has been created as this wil
 while true; do
 read -p "Do you want to proceed? (Y/n) " yn
 case $yn in 
-	[""|yY] ) echo ok, we will proceed;
+	""|"y"|"Y" ) echo "\n";    #echo ok, we will proceed;
 		break;;
 	[nN] ) echo exiting...;
 		exit;;
@@ -29,4 +29,4 @@ apt clean && sudo apt autoremove
     #   Set system for clean first boot setup
 rm /etc/ssh/ssh_host_*
 truncate -s 0 /etc/machine-id
-printf '\nFinished, shutdown and create template'
+printf '\nFinished, shutdown and create template\n'
