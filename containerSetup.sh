@@ -27,5 +27,6 @@ sed -i 's!#ignoreip = 127.0.0.1/8 ::1!ignoreip = 127.0.0.1/8 ::1 192.168.1.100 1
     #   Clean downloaded packages and remove orphans
 apt clean && sudo apt autoremove
     #   Set system for clean first boot setup
-cloud-init clean
-ehco 'Finished, Shutdown and create template'
+rm /etc/ssh/ssh_host_*
+truncate -s 0 /etc/machine-id
+echo 'Finished, shutdown and create template'
