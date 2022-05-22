@@ -6,7 +6,6 @@ echo 'WARNING: run this script only once a user has been created as this will di
 read -p "Proceed with system changes? " -n 1 -r
 echo    # (optional) move to a new line
 if [[ ! $REPLY =~ ^[Yy]$ ]]
-    Yes ) make install
         #   Restrict Root login and to IPv4 only
     sed 's/#PermitRootLogin prohibit-password/PermitRootLogin no/g' /etc/ssh/sshd_config | sed 's/#AddressFamily any/AddressFamily inet/g'
         #   Make ssh folder and set permissions
