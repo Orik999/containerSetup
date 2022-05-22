@@ -1,7 +1,7 @@
 #! /bin/bash
 
 echo -e '\033[5m\nWARNING WARNING WARNING\033[0m'
-printf '\nWARNING: run this script only once a user has been created as this will disable root login'
+printf '\nWARNING: run this script only once a user has been created as this will disable root login\n'
 
 while true; do
 read -p "Do you want to proceed? (Y/n) " yn
