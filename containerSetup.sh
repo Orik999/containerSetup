@@ -1,34 +1,59 @@
 #! /bin/bash
 
-echo -e '\033[5m\nWARNING WARNING WARNING\033[0m'
-printf '\nWARNING: run this script only once a user has been created as this will disable root login\n'
+username=orik
 
 while true; do
-read -p "Do you want to proceed? (Y/n) " yn
-case $yn in 
-	""|"y"|"Y" ) echo "\n";    #echo ok, we will proceed;
-		break;;
-	[nN] ) echo exiting...;
-		exit;;
+read -p "[1] Setup Container(Root) - [2] Setup Container Template(User) - [c] Cancel (1/2/c)" response12c
+case $response12c in 
+	[1] ) echo Setting up Container;
+    #   Check if user exists
+        egrep "$username" /etc/passwd >/dev/null || echo "Error- Image is not a preset template" && exit 1
+    #   Delete old ssh keys and gen new keys
+        rm /etc/ssh/ssh_host_* && dpkg-reconfigure openssh-server
+    #   Disable Password login
+        sed -i 's!#PasswordAuthentication yes!PasswordAuthentication no!g' /etc/ssh/sshd_config
+    #   Update packeges
+        sudo apt update && sudo apt -y dist-upgrade
+    #   Clean downloaded packages and remove orphans
+        apt clean && sudo apt autoremove
+        read -p "Reboot now "
+        rp=1
+        break;;
+	[2] ) echo Setting up Container Template;
+        #read -p "Enter Username" username
+        #read -p "Enter Password" password
+        password=sa.EukkiViW5.
+    #   Check if user exists
+        egrep "$username" /etc/passwd >/dev/null && echo "User exists exiting" && exit 2
+    #   Create user
+        useradd -m -p "$password" "$username"
+    #   Add user to sudo group
+        usermod -aG sudo $username
+    #   Update packeges
+        sudo apt update && sudo apt -y dist-upgrade
+    #   Restrict Root login and to IPv4 only
+        sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin no/g;s/#AddressFamily any/AddressFamily inet/g' /etc/ssh/sshd_config
+    #   Make ssh folder and set permissions
+        chmod 700 $username/.ssh
+    #   Clean downloaded packages and remove orphans
+        apt clean && sudo apt autoremove
+    #   Set system for clean first boot setup
+        truncate -s 0 /etc/machine-id
+        read -p "Power off now and dont forget to create Template before next boot! "
+        rp=2
+        break;;
+	[3] ) echo exiting...;
+		exit;;		
 	* ) echo invalid response;;
 esac
-
 done
-    #   Restrict Root login and to IPv4 only
-sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin no/g;s/#AddressFamily any/AddressFamily inet/g' /etc/ssh/sshd_config
-    #   Make ssh folder and set permissions
-mkdir ~/.ssh && chmod 700 ~/.ssh
-######### NO need if ssh key based login ###################
-#    #   Install Start Fail2Ban
-#apt install fail2ban python3-pyinotify python3-systemd whois && systemctl start fail2ban
-#    #   Create Copy fail2ban jail.local config
-#cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
-#    #   Whitelist yourself from ever getting jailed
-#sed -i 's!#ignoreip = 127.0.0.1/8 ::1!ignoreip = 127.0.0.1/8 ::1 192.168.1.100 192.168.1.101!g' /etc/#fail2ban/jail.local
-#    #   Clean downloaded packages and remove orphans
-######### NO need if ssh key based login ###################
-apt clean && sudo apt autoremove
-    #   Set system for clean first boot setup
-rm /etc/ssh/ssh_host_*
-truncate -s 0 /etc/machine-id
-printf '\nFinished, shutdown and create template\n'
+
+#   Reboot or Poweroff
+case $rp in 
+    [1] ) echo Rebooting...;
+    sleep 2 && reboot
+    exit;;
+    [2] ) echo Powering off...;
+    sleep 2 && poweroff
+    exit;;
+esac
