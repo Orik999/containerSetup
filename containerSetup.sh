@@ -3,9 +3,9 @@
 echo -e '\033[5mWARNING\033[0m'
 echo 'WARNING: run this script only once a user has been created as this will disable root login'
 
-echo "Do you wish do the system changes?"
-select yn in "Yes" "No"; do
-  case $yn in
+read -p "Proceed with system changes? " -n 1 -r
+echo    # (optional) move to a new line
+if [[ ! $REPLY =~ ^[Yy]$ ]]
     Yes ) make install
         #   Restrict Root login and to IPv4 only
     sed 's/#PermitRootLogin prohibit-password/PermitRootLogin no/g' /etc/ssh/sshd_config | sed 's/#AddressFamily any/AddressFamily inet/g'
@@ -22,9 +22,6 @@ select yn in "Yes" "No"; do
         #   Set system for clean first boot setup
     cloud-init clean
     ehco 'Finished, Shutdown and create template'
-    ;;
-    No )
+then
         [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1 # handle exits from shell or function but don't exit interactive shell
-    ;;
-  esac
-done
+fi
