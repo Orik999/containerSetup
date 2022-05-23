@@ -7,7 +7,7 @@ read -p "[1] Setup Container(User) - [2] Setup Container Template(Root) - [c] Ca
     case $response12c in 
         [1] ) echo Setting up Container;
         #   Check if user exists
-            egrep "$username" /etc/passwd >/dev/null || echo "Error- Container is not a template" && exit 1;
+            egrep "$username" /etc/passwd >/dev/null || echo "Error- Container is not a template"
         #   Ask user to enter ssh public key
             read -p "Please enter ssh public key: " pubsshkey
         #   Delete old ssh keys and gen new keys
@@ -31,7 +31,7 @@ EOF
             #read -p "Enter Username" username
             #read -p "Enter Password" password
         #   Check if user exists > exit
-            egrep "$username" /etc/passwd >/dev/null && echo "User exists! Script cancelled" && exit 1;
+            egrep "$username" /etc/passwd >/dev/null && echo "User exists! Script cancelled"
         #   Set hashed pass
             password=sa.EukkiViW5.
         #   Create user
