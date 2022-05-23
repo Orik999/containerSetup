@@ -12,7 +12,7 @@ read -p "[1] Setup Container(User) - [2] Setup Container Template(Root) - [[c]] 
             exit 1
         fi
         #   Ask user to enter ssh public key
-            read -p "Please enter ssh public key: " pubsshkey
+            read -p "Must enter ssh public key, otherwise you won't be able to login!: " pubsshkey
         #   Delete old ssh keys and gen new keys
             sudo rm /etc/ssh/ssh_host_* && sudo dpkg-reconfigure openssh-server
         #   Disable Password login
@@ -40,6 +40,8 @@ EOF
             echo "Not a fresh system! Script cancelled"
             exit 1
         fi
+        #   Ask user if they would like to add  ssh public key
+            read -p "Please enter ssh public key or press enter: " pubsshkey
         #   Set hashed pass
             password=sa.EukkiViW5.
         #   Create user
@@ -59,6 +61,12 @@ EOF
             apt clean && sudo apt autoremove
         #   Set system for clean first boot setup
             truncate -s 0 /etc/machine-id
+        #   Create ssh auth file and add ssh public key
+            cat > /home/$username/.ssh/authorized_keys << EOF
+# --- BEGIN PVE ---
+$pubsshkey
+# --- END PVE ---
+EOF
             read -n 1 -s -r -p "Press enter to POWER OFF now. Dont forget to create Template before next boot! "
             rp=2
             break;;
