@@ -3,11 +3,13 @@
 username=orik
 
 while true; do
-read -p "[1] Setup Container(Root) - [2] Setup Container Template(Root) - [c] Cancel (1/2/[c])" response12c
+read -p "[1] Setup Container(User) - [2] Setup Container Template(Root) - [c] Cancel (1/2/[c])" response12c
     case $response12c in 
         [1] ) echo Setting up Container;
         #   Check if user exists
             egrep "$username" /etc/passwd >/dev/null || echo "Error- Container is not a template" && exit 1;
+        #   Ask user to enter ssh public key
+            read -p "Please enter ssh public key: " pubsshkey
         #   Delete old ssh keys and gen new keys
             rm /etc/ssh/ssh_host_* && dpkg-reconfigure openssh-server
         #   Disable Password login
@@ -16,7 +18,13 @@ read -p "[1] Setup Container(Root) - [2] Setup Container Template(Root) - [c] Ca
             sudo apt update && sudo apt -y dist-upgrade
         #   Clean downloaded packages and remove orphans
             apt clean && sudo apt autoremove
-            read -n 1 -s -r -p "Reboot now. "
+        #   Create ssh auth file and add ssh public key
+            cat > /home/$username/.ssh/authorized_keys << EOF
+# --- BEGIN PVE ---
+$pubsshkey
+# --- END PVE ---
+EOF
+            read -n 1 -s -r -p "Press enter to REBOOT NOW. "
             rp=1
             break;;
         [2] ) echo Setting up Container Template;
@@ -30,6 +38,8 @@ read -p "[1] Setup Container(Root) - [2] Setup Container Template(Root) - [c] Ca
             useradd -m -p "$password" "$username"
         #   Add user to sudo group
             usermod -aG sudo $username
+        #   Fix default bash for user
+            chsh -s /bin/bash $username
         #   Set ssh permissions
             chmod 700 ~/.ssh
         #   Create ssh folder for USER and Set permissions
