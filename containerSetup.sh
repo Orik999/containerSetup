@@ -14,7 +14,7 @@ read -p "[1] Setup Container(User) - [2] Setup Container Template(Root) - [[c]] 
         #   Ask user to enter ssh public key
             read -p "Please enter ssh public key: " pubsshkey
         #   Delete old ssh keys and gen new keys
-            rm /etc/ssh/ssh_host_* && dpkg-reconfigure openssh-server
+            sudo rm /etc/ssh/ssh_host_* && dpkg-reconfigure openssh-server
         #   Disable Password login
             sed -i 's!#PasswordAuthentication yes!PasswordAuthentication no!g' /etc/ssh/sshd_config
         #   Update packeges
