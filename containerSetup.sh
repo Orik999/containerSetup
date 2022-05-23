@@ -7,8 +7,12 @@ read -p "[1] Setup Container(User) - [2] Setup Container Template(Root) - [[c]] 
     case $response12c in 
         [1] ) echo Setting up Container;
         #   Check if user exists > continue
-        if !  id "$username" >/dev/null 2>&1; then
+        if  ! id "$username" >/dev/null 2>&1; then
             echo "Error- Container is not a template"
+            exit 1
+        fi
+        if  [ whoami = "root" ]; then
+            echo "Login as $username and restart script"
             exit 1
         fi
         #   Ask user to enter ssh public key
