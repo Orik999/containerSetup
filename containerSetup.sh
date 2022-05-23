@@ -17,12 +17,14 @@ read -p "[1] Setup Container(User) - [2] Setup Container Template(Root) - [[c]] 
             sudo rm /etc/ssh/ssh_host_* && sudo dpkg-reconfigure openssh-server
         #   Disable Password login
             sudo sed -i 's!#PasswordAuthentication yes!PasswordAuthentication no!g' /etc/ssh/sshd_config
+        #   Restrict Root login and to IPv4 only
+            sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin no/g;s/#AddressFamily any/AddressFamily inet/g' /etc/ssh/sshd_config
         #   Update packeges
             sudo apt update && sudo apt -y dist-upgrade
         #   Clean downloaded packages and remove orphans
             sudo apt clean && sudo apt autoremove
         #   Create ssh auth file and add ssh public key
-            sudo cat > /home/$username/.ssh/authorized_keys << EOF
+            cat > /home/$username/.ssh/authorized_keys << EOF
 # --- BEGIN PVE ---
 $pubsshkey
 # --- END PVE ---
@@ -53,8 +55,7 @@ EOF
             chown $username /home/$username/.ssh
         #   Update packeges
             sudo apt update && sudo apt -y dist-upgrade
-        #   Restrict Root login and to IPv4 only
-            sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin no/g;s/#AddressFamily any/AddressFamily inet/g' /etc/ssh/sshd_config
+
         #   Clean downloaded packages and remove orphans
             apt clean && sudo apt autoremove
         #   Set system for clean first boot setup
