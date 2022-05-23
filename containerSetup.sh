@@ -55,7 +55,6 @@ EOF
             chown $username /home/$username/.ssh
         #   Update packeges
             sudo apt update && sudo apt -y dist-upgrade
-
         #   Clean downloaded packages and remove orphans
             apt clean && sudo apt autoremove
         #   Set system for clean first boot setup
@@ -72,7 +71,7 @@ done
 #   Reboot or Poweroff
 case $rp in 
     [1] ) echo \nRebooting...;
-    sleep 2 && reboot
+    sleep 2 && sudo reboot
     exit;;
     [2] ) echo \nPowering off...;
     sleep 2 && poweroff
