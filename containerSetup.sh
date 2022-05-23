@@ -3,11 +3,14 @@
 username=orik
 
 while true; do
-read -p "[1] Setup Container(User) - [2] Setup Container Template(Root) - [c] Cancel (1/2/[c])" response12c
+read -p "[1] Setup Container(User) - [2] Setup Container Template(Root) - [[c]] Cancel: " response12c
     case $response12c in 
         [1] ) echo Setting up Container;
-        #   Check if user exists
-            egrep "$username" /etc/passwd >/dev/null || echo "Error- Container is not a template"
+        #   Check if user exists > continue
+        if !  id "$username" >/dev/null 2>&1; then
+            echo "Error- Container is not a template"
+            exit 1
+        fi
         #   Ask user to enter ssh public key
             read -p "Please enter ssh public key: " pubsshkey
         #   Delete old ssh keys and gen new keys
@@ -31,7 +34,10 @@ EOF
             #read -p "Enter Username" username
             #read -p "Enter Password" password
         #   Check if user exists > exit
-            egrep "$username" /etc/passwd >/dev/null && echo "User exists! Script cancelled"
+        if  id "$username" >/dev/null 2>&1; then
+            echo "Not a fresh system! Script cancelled"
+            exit 1
+        fi
         #   Set hashed pass
             password=sa.EukkiViW5.
         #   Create user
