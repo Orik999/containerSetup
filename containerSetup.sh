@@ -14,15 +14,15 @@ read -p "[1] Setup Container(User) - [2] Setup Container Template(Root) - [[c]] 
         #   Ask user to enter ssh public key
             read -p "Please enter ssh public key: " pubsshkey
         #   Delete old ssh keys and gen new keys
-            sudo rm /etc/ssh/ssh_host_* && dpkg-reconfigure openssh-server
+            sudo rm /etc/ssh/ssh_host_* && sudo dpkg-reconfigure openssh-server
         #   Disable Password login
-            sed -i 's!#PasswordAuthentication yes!PasswordAuthentication no!g' /etc/ssh/sshd_config
+            sudo sed -i 's!#PasswordAuthentication yes!PasswordAuthentication no!g' /etc/ssh/sshd_config
         #   Update packeges
             sudo apt update && sudo apt -y dist-upgrade
         #   Clean downloaded packages and remove orphans
-            apt clean && sudo apt autoremove
+            sudo apt clean && sudo apt autoremove
         #   Create ssh auth file and add ssh public key
-            cat > /home/$username/.ssh/authorized_keys << EOF
+            sudo cat > /home/$username/.ssh/authorized_keys << EOF
 # --- BEGIN PVE ---
 $pubsshkey
 # --- END PVE ---
