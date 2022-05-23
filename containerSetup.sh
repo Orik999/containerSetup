@@ -3,7 +3,7 @@
 username=orik
 
 while true; do
-read -p "[1] Setup Container(Root) - [2] Setup Container Template(User) - [c] Cancel (1/2/[c])" response12c
+read -p "[1] Setup Container(Root) - [2] Setup Container Template(Root) - [c] Cancel (1/2/[c])" response12c
     case $response12c in 
         [1] ) echo Setting up Container;
         #   Check if user exists
@@ -43,7 +43,7 @@ read -p "[1] Setup Container(Root) - [2] Setup Container Template(User) - [c] Ca
             apt clean && sudo apt autoremove
         #   Set system for clean first boot setup
             truncate -s 0 /etc/machine-id
-            read -n 1 -s -r -p "Power off now. Dont forget to create Template before next boot! "
+            read -n 1 -s -r -p "Press enter to POWER OFF now. Dont forget to create Template before next boot! "
             rp=2
             break;;
         ""|"c"|"C" ) echo exiting...;
@@ -54,10 +54,10 @@ done
 
 #   Reboot or Poweroff
 case $rp in 
-    [1] ) echo Rebooting...;
+    [1] ) echo \nRebooting...;
     sleep 2 && reboot
     exit;;
-    [2] ) echo Powering off...;
+    [2] ) echo \nPowering off...;
     sleep 2 && poweroff
     exit;;
 esac
