@@ -11,22 +11,22 @@ read -p "[1] Setup Container(User) - [2] Setup Container Template(Root) - [[c]] 
             echo "Error- Container is not a template"
             exit 1
         fi
-        if  [ whoami = "root" ]; then
-            echo "Login as $username and restart script"
-            exit 1
+        #   Check if user not root then run all commands as sudo
+        if  [[ "$(whoami)" != "root" ]]; then
+            SUDO_CMD="sudo "
         fi
         #   Ask user to enter ssh public key
             read -p "Must enter ssh public key, otherwise you won't be able to login!: " pubsshkey
         #   Delete old ssh keys and gen new keys
-            sudo rm /etc/ssh/ssh_host_* && sudo dpkg-reconfigure openssh-server
+            $SUDO_CMD rm /etc/ssh/ssh_host_* && $SUDO_CMD dpkg-reconfigure openssh-server
         #   Disable Password login
-            sudo sed -i 's!#PasswordAuthentication yes!PasswordAuthentication no!g' /etc/ssh/sshd_config
+          #  $SUDO_CMD sed -i 's!#PasswordAuthentication yes!PasswordAuthentication no!g' /etc/ssh/sshd_config
         #   Restrict Root login and to IPv4 only
-            sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin no/g;s/#AddressFamily any/AddressFamily inet/g' /etc/ssh/sshd_config
+            $SUDO_CMD sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin no/g;s/#AddressFamily any/AddressFamily inet/g;s/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
         #   Update packeges
-            sudo apt update && sudo apt -y dist-upgrade
+            $SUDO_CMD apt update && $SUDO_CMD apt -y dist-upgrade
         #   Clean downloaded packages and remove orphans
-            sudo apt clean && sudo apt autoremove
+            $SUDO_CMD apt clean && $SUDO_CMD apt autoremove
         #   Create ssh auth file and add ssh public key
             cat > /home/$username/.ssh/authorized_keys << EOF
 # --- BEGIN PVE ---
@@ -37,8 +37,6 @@ EOF
             rp=1
             break;;
         [2] ) echo Setting up Container Template;
-            #read -p "Enter Username" username
-            #read -p "Enter Password" password
         #   Check if user exists > exit
         if  id "$username" >/dev/null 2>&1; then
             echo "Not a fresh system! Script cancelled"
