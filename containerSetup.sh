@@ -84,7 +84,7 @@ case $rp in
     [1] ) echo -e "\nRebooting...";
     sleep 2 && $SUDO_CMD reboot
     exit;;
-    [2] ) echo Powering off...;
+    [2] ) echo -e "\nPowering off...";
     sleep 2 && poweroff
     exit;;
 esac
