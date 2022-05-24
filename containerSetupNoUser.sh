@@ -10,10 +10,6 @@ read -p "Setup Container [Y/n]: " yn
         fi
         #   If ssh auth key file doesn't exist ask user to enter ssh public key
             [ -f ~/.ssh/authorized_keys ] || read -p "Must enter ssh public key, otherwise you won't be able to login!: " pubsshkey
-        #   Ask user to enter ssh public key
-            read -p "Must enter ssh public key, otherwise you won't be able to login!: " pubsshkey
-        #   Delete old ssh keys and gen new keys
-            $SUDO_CMD rm /etc/ssh/ssh_host_* && $SUDO_CMD dpkg-reconfigure openssh-server
         #   Restrict Root login and to IPv4 only
             $SUDO_CMD sed -i 's/#AddressFamily any/AddressFamily inet/g;s/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
         #   Update packeges
