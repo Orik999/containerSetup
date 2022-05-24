@@ -1,9 +1,9 @@
 #! /bin/bash
 
 while true; do
-read -p "Setup Container [Y/n]: " yn
+read -p "Setup Container/VM [Y/n]: " yn
     case $yn in 
-        ""|"y"|"Y" ) echo Setting up Container;
+        ""|"y"|"Y" ) echo Setting up Container/VM;
         #   Check if user not root then run all commands as sudo
         if  [[ "$(whoami)" != "root" ]]; then
             SUDO_CMD="sudo "
@@ -22,6 +22,7 @@ read -p "Setup Container [Y/n]: " yn
 $pubsshkey
 # --- END PVE ---
 EOF
+            echo ""
             read -n 1 -s -r -p "Press enter to REBOOT NOW. "
             break;;
         [nN] ) echo -e "\nExiting...";
