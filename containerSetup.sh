@@ -69,6 +69,7 @@ EOF
 $pubsshkey
 # --- END PVE ---
 EOF
+            echo ""
             read -n 1 -s -r -p "Press enter to POWER OFF now. Dont forget to create Template before next boot! "
             rp=2
             break;;
@@ -80,10 +81,10 @@ done
 
 #   Reboot or Poweroff
 case $rp in 
-    [1] ) echo \nRebooting...;
-    sleep 2 && sudo reboot
+    [1] ) echo -e "\nRebooting...";
+    sleep 2 && $SUDO_CMD reboot
     exit;;
-    [2] ) echo \nPowering off...;
+    [2] ) echo Powering off...;
     sleep 2 && poweroff
     exit;;
 esac
