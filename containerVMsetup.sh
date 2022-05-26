@@ -65,7 +65,7 @@ EOF
     #   Update packeges
         $SUDO_CMD apt update && $SUDO_CMD apt -y dist-upgrade
     #   Install qemu agent
-        $SUDO_CMD apt install qemu-guest-agent
+        $SUDO_CMD apt -y install qemu-guest-agent
     #   Clean downloaded packages and remove orphans
         $SUDO_CMD apt clean && $SUDO_CMD apt autoremove
 #    #   If var pubsshkey not empty create ssh auth file and add ssh public key
@@ -90,6 +90,6 @@ case $rp in
     sleep 2 && $SUDO_CMD reboot
     exit;;
     [2] ) echo -e "\nPowering off...";
-    sleep 2 && poweroff
+    sleep 2 && $SUDO_CMD poweroff
     exit;;
 esac
