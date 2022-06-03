@@ -67,7 +67,7 @@ EOF
     #   Install qemu agent
         $SUDO_CMD apt -y install qemu-guest-agent
     #   Clean downloaded packages and remove orphans
-        $SUDO_CMD apt clean && $SUDO_CMD apt autoremove
+        $SUDO_CMD apt clean && $SUDO_CMD apt -y autoremove
 #    #   If var pubsshkey not empty create ssh auth file and add ssh public key
 #        [[ ! -z "$pubsshkey" ]] && cat > /home/$username/.ssh/authorized_keys << EOF
 ## --- BEGIN PVE ---
