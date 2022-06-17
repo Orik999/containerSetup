@@ -22,7 +22,8 @@ done
 case $ynresponse in 
     [1] ) echo Setting up Container;
     #   If ssh auth key file doesn't exist ask user to enter ssh public key
-        [ -f ~/.ssh/authorized_keys ] || read -p "Must enter ssh public key, otherwise you won't be able to login!: " pubsshkey
+    #    [ -f ~/.ssh/authorized_keys ] || read -p "Must enter ssh public key, otherwise you won't be able to login!: " pubsshkey
+        pubsshkey=$(<"$HOME/.ssh/authorized_keys")
     #   Restrict Root login and to IPv4 only
         $SUDO_CMD sed -i 's/#AddressFamily any/AddressFamily inet/g;s/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
     #   Update packeges
@@ -70,6 +71,11 @@ EOF
         $SUDO_CMD apt clean && $SUDO_CMD apt -y autoremove
 #    #   If var pubsshkey not empty create ssh auth file and add ssh public key
 #        [[ ! -z "$pubsshkey" ]] && cat > /home/$username/.ssh/authorized_keys << EOF
+sed "s/~/.ssh/authorized_keys/$1/" pubsshkey
+while read line; do echo $line; done < ~/.ssh/authorized_keys
+pubsshkey=$(cat "$HOME/.ssh/authorized_keys")
+for line in $(cat "$HOME/.ssh/authorized_keys"); do echo $line; done
+pubsshkey=$(<"$HOME/.ssh/authorized_keys")
 ## --- BEGIN PVE ---
 #$pubsshkey
 ## --- END PVE ---
