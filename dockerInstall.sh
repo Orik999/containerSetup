@@ -62,7 +62,7 @@ cat > ~/docker/.env << EOF
 DOCKER_DIR=/home/orik/docker
 DOCKER_SECRETS_DIR=/home/orik/docker/secrets
 PUID=1000
-PGID=1000
+PGID=999
 TZ="Asia/Bangkok"
 USERDIR="home/orik"
 MYSQL_ROOT_PASSWORD="passsword"
