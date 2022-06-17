@@ -11,7 +11,7 @@ read -p "Setup Container/VM [Y/n]: " yn
     case $yn in 
         ""|"y"|"Y" ) echo Setting up Container/VM;
         #   Check if system is a container
-            SUDO_CMD grep -qa container=lxc /proc/1/environ && ynresponse=1 || ynresponse=2
+            grep -qa container=lxc /proc/1/environ && ynresponse=1 || ynresponse=2
             break;;
         [nN] ) echo -e "\nExiting...";
             exit;;		
