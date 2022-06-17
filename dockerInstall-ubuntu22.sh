@@ -35,16 +35,12 @@ sudo usermod -aG docker $USER
 #   If you need to uninstall Docker, run the following
 #   $sudo apt-get remove docker docker-engine docker.io containerd runc
 
-#   Create Docker root folder and set permissions
-mkdir $HOME/docker && \
-sudo setfacl -Rdm g:docker:rwx $HOME/docker && \
-sudo chmod -R 775 $HOME/docker
-#   By adding sudo in front, it will be owned by the root user
-sudo mkdir $HOME/docker/secrets
-
+#   Create Docker root folder and secrets folder
+mkdir ~/docker && \
+mkdir ~/docker/secrets
 #   Create secret files
-sudo echo "orik:$$apr1$$fUdDqskz$$zSgIUhrs4tpuMmXzjzqJx." > /home/orik/docker/secrets/htpasswd
-sudo echo "oriknj999@gmail.com" > /home/orik/docker/secrets/cf_email
+sudo echo "orik:$$apr1$$fUdDqskz$$zSgIUhrs4tpuMmXzjzqJx." > ~/docker/secrets/htpasswd
+sudo echo "oriknj999@gmail.com" > ~/docker/secrets/cf_email
 sudo echo "eUOluKNZJ4rJi5BmqgY-M2pMXhBqWfVcdzbEDqt0" > ~/docker/secrets/cf_api_key
 sudo echo "COEvgLN30ZhAX81-5cOfiKey7zcHMLH12QCPQxT_" > ~/docker/secrets/cf_api_key_ddns
 #   generate strong password for db root and create db root password file
@@ -52,9 +48,13 @@ sudo echo "973cfRW5RZQ7**WRxz?M" > ~/docker/secrets/db_root_password
 #   create db user password file
 sudo echo "uWfpQAt4VgKWn?=Y5zV=" > ~/docker/secrets/db_password
 
-#   set stricter permissions
-sudo chown root:root $HOME/docker/secrets && \
-sudo chmod 600 $HOME/docker/secrets
+#   set permissions to folders
+sudo setfacl -Rdm g:docker:rwx ~/docker && \
+sudo chmod -R 775 ~/docker
+
+#   set stricter permissions for secret folder
+sudo chown root:root ~/docker/secrets && \
+sudo chmod 600 ~/docker/secrets
 
 #   create environment for docker
 touch ~/docker/.env && \
@@ -72,7 +72,6 @@ DOMAINNAME=najafov.co.uk
 EOF
 #   check id and for PGID get docker id
 #id
-
 
 #################   Docker Compose  #################
 #   Download Docker compose
