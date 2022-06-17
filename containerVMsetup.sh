@@ -44,7 +44,7 @@ case $ynresponse in
         chown $username /home/$username/.ssh
     #   copy ssh key from root to user
         touch /home/$username/.ssh/authorized_keys
-        cat $HOME/.ssh/authorized_keys >> home/$username/.ssh/authorized_keys
+        cat .ssh/authorized_keys >> /home/$username/.ssh/authorized_keys
     #   Restrict Root login and to IPv4 only
         sed -i 's/#AddressFamily any/AddressFamily inet/g;s/#PasswordAuthentication yes/PasswordAuthentication no/g;s/#PermitRootLogin prohibit-password/PermitRootLogin no/g' /etc/ssh/sshd_config
     #   Update packeges
