@@ -55,9 +55,9 @@ header_info
 msg_info "Removing local-lvm and adding regained space to local"
 sleep 2
 #umount /dev/pve/data
-lvremove -y /dev/pve/data
-lvresize -l +100%FREE /dev/pve/root
-resize2fs /dev/mapper/pve-root
+lvremove -y /dev/pve/data &>/dev/null
+lvresize -l +100%FREE /dev/pve/root &>/dev/null
+resize2fs /dev/mapper/pve-root &>/dev/null
 msg_ok "local-lvm Removed and free space added to local"
 
 msg_info "Restricting Root login and disabling password login and IPv4 only"
