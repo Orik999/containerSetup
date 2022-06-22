@@ -54,8 +54,8 @@ header_info
 
 msg_info "Removing local-lvm and adding regained space to local"
 sleep 2
-umount /dev/pve/data
-lvremove /dev/pve/data
+#umount /dev/pve/data
+lvremove -y /dev/pve/data
 lvresize -l +100%FREE /dev/pve/root
 resize2fs /dev/mapper/pve-root
 msg_ok "local-lvm Removed and free space added to local"
