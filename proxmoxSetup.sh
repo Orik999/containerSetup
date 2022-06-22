@@ -86,8 +86,9 @@ msg_ok "Added or Corrected PVE7 Sources"
 #   update and clean
 msg_info "Updating system"
 sleep 2
-apt-get update && apt -y dist-upgrade
-apt -y autoremove
+apt update &>/dev/null
+apt -y dist-upgrade &>/dev/null
+apt -y autoremove &>/dev/null
 msg_ok "System updated"
 
 msg_info "Disabling Subscription Nag"
@@ -101,7 +102,7 @@ msg_ok "Laptop setup - lid close ignored"
 
 msg_info "Setting turn off screen after 5mins of inactivity"
 sed -i 's/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX="consolebland=300"/g' /etc/default/grub
-update-grub
+update-grub &>/dev/null
 msg_ok "Screen will turn of after 5mins of inactivity"
 
 msg_info "Stopping/Removing spiceproxy - spiceproxy is only needed if in cluster"
@@ -110,7 +111,7 @@ rm /etc/systemd/system/multi-user.target.wants/spiceproxy.service
 msg_ok "Spiceproxy stopped and removed"
 
 msg_info "Installing Dark Theme"
-bash <(curl -s https://raw.githubusercontent.com/Weilbyte/PVEDiscordDark/master/PVEDiscordDark.sh ) install
+bash <(curl -s https://raw.githubusercontent.com/Weilbyte/PVEDiscordDark/master/PVEDiscordDark.sh ) install &>/dev/null
 msg_ok "Dark Theme installed"
 
 msg_ok "Finished post install config...."
