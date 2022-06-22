@@ -60,6 +60,12 @@ lvresize -l +100%FREE /dev/pve/root
 resize2fs /dev/mapper/pve-root
 msg_ok "local-lvm Removed and free space added to local"
 
+msg_info "Restricting Root login and disabling password login and IPv4 only"
+sleep 2
+#   Restrict Root login and to IPv4 only
+sed -i 's/#AddressFamily any/AddressFamily inet/g;s/#PasswordAuthentication yes/PasswordAuthentication no/g;s/PermitRootLogin.*/PermitRootLogin no/g' /etc/ssh/sshd_config
+msg_ok "Root login restricted, pass login disabled, only IPv4 set"
+
 msg_info "Disabling Enterprise Repository"
 sleep 2
 sed -i "s/^deb/#deb/g" /etc/apt/sources.list.d/pve-enterprise.list
