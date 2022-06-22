@@ -28,6 +28,9 @@ $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev
 #   Install docker      #   To check install run $docker -v -or- sudo systemctl status docker
 sudo apt update && \
 sudo apt -y install docker-ce && \
+# sudo apt -y docker-ce-cli && \
+# sudo apt -y containerd.io && \
+# sudo apt -y docker-compose-plugin
 sudo systemctl enable docker
 
 #   Use Docker without sudo
@@ -39,7 +42,8 @@ sudo usermod -aG docker $USER
 mkdir ~/docker && \
 mkdir ~/docker/secrets
 #   Create secret files
-sudo echo "orik:$$apr1$$fUdDqskz$$zSgIUhrs4tpuMmXzjzqJx." > ~/docker/secrets/htpasswd
+#   to create htpasswd use: echo $(htpasswd -nb username mystrongpassword) | sed -e s/\\$/\\$\\$/g
+sudo echo "orik:$apr1$fUdDqskz$zSgIUhrs4tpuMmXzjzqJx." > ~/docker/secrets/htpasswd
 sudo echo "oriknj999@gmail.com" > ~/docker/secrets/cf_email
 sudo echo "eUOluKNZJ4rJi5BmqgY-M2pMXhBqWfVcdzbEDqt0" > ~/docker/secrets/cf_api_key
 sudo echo "COEvgLN30ZhAX81-5cOfiKey7zcHMLH12QCPQxT_" > ~/docker/secrets/cf_api_key_ddns
@@ -56,22 +60,32 @@ sudo chmod -R 775 ~/docker
 sudo chown root:root ~/docker/secrets && \
 sudo chmod 600 ~/docker/secrets
 
+#   get user and docker group id
+dockerid=$(getent group docker | cut -d: -f3)
+userid=$(getent group $USER | cut -d: -f3)
+
+#   get user dir
+userdir=$(pwd)
+
 #   create environment for docker
 touch ~/docker/.env && \
 cat > ~/docker/.env << EOF
-DOCKER_DIR=/home/orik/docker
-DOCKER_SECRETS_DIR=/home/orik/docker/secrets
-PUID=1000
-PGID=999
+DOCKER_DIR=$userdir/docker
+DOCKER_SECRETS_DIR=$userdir/docker/secrets
+PUID=$userid
+PGID=$dockerid
 TZ="Asia/Bangkok"
-USERDIR="/home/orik"
+USERDIR=$userdir
 MYSQL_ROOT_PASSWORD="passsword"
-HTTP_USERNAME=orik
+HTTP_USERNAME=$USER
 HTTP_PASSWORD=mystrongpassword
 DOMAINNAME=najafov.co.uk
 EOF
 #   check id and for PGID get docker id
 #id
+
+#   Change DOCKER_OPTS to Respect IP Table Firewall
+sed -i '/#DOCKER_OPTS=.*/a DOCKER_OPTS="--iptables=false"' /etc/default/docker
 
 #################   Docker Compose  #################
 #   Download Docker compose
