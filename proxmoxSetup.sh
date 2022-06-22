@@ -77,7 +77,7 @@ deb http://download.proxmox.com/debian/pve bullseye pve-no-subscription
 EOF
 sleep 2
 msg_ok "Added or Corrected PVE7 Sources"
-
+#   update and clean
 msg_info "Updating system"
 sleep 2
 apt-get update && apt -y dist-upgrade
