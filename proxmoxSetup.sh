@@ -113,9 +113,8 @@ msg_ok "Spiceproxy stopped and removed"
 msg_info "Installing Dark Theme"
 bash <(curl -s https://raw.githubusercontent.com/Weilbyte/PVEDiscordDark/master/PVEDiscordDark.sh ) install &>/dev/null
 msg_ok "Dark Theme installed"
-
-msg_ok "Finished post install config...."
-
+echo ""
+echo "Finished post install config...."
 echo ""
 read -n 1 -s -r -p "Press enter to REBOOT NOW. "
 sleep 2 && reboot
