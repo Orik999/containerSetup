@@ -82,8 +82,8 @@ case $ynresponse in
 
         msg_info "Copying ssh key from user root to $username"
         sleep 2
-        touch /home/$username/.ssh/authorized_keys &>/dev/null
-        cat .ssh/authorized_keys >> /home/$username/.ssh/authorized_keys &>/dev/null
+        touch /home/$username/.ssh/authorized_keys
+        cat .ssh/authorized_keys >> /home/$username/.ssh/authorized_keys
         msg_ok "SSH keys copied from user root to $username"
 
         msg_info "Disabling Root and password login, setting IPv4 only"
@@ -102,9 +102,8 @@ case $ynresponse in
         apt clean &>/dev/null
         apt autoremove &>/dev/null
         msg_ok "Downloaded packages cleared and orphans removed"
-
-        msg_ok "System config Finished..."
-
+        echo ""
+        echo "System config Finished..."
         echo ""
         read -n 1 -s -r -p "Press enter to REBOOT NOW. "
         rp=1
