@@ -60,12 +60,6 @@ lvresize -l +100%FREE /dev/pve/root &>/dev/null
 resize2fs /dev/mapper/pve-root &>/dev/null
 msg_ok "local-lvm Removed and free space added to local"
 
-msg_info "Restricting Root login and disabling password login and IPv4 only"
-sleep 2
-#   Restrict Root login and to IPv4 only
-sed -i 's/#AddressFamily any/AddressFamily inet/g;s/#PasswordAuthentication yes/PasswordAuthentication no/g;s/PermitRootLogin.*/PermitRootLogin prohibit-password/g' /etc/ssh/sshd_config
-msg_ok "Root login restricted, pass login disabled, only IPv4 set"
-
 msg_info "Disabling Enterprise Repository"
 sleep 2
 sed -i "s/^deb/#deb/g" /etc/apt/sources.list.d/pve-enterprise.list
@@ -90,6 +84,12 @@ apt update # &>/dev/null
 apt -y dist-upgrade # &>/dev/null
 apt -y autoremove # &>/dev/null
 msg_ok "System updated"
+
+msg_info "Restricting Root login and disabling password login and IPv4 only"
+sleep 2
+#   Restrict Root login and to IPv4 only
+sed -i 's/#AddressFamily any/AddressFamily inet/g;s/#PasswordAuthentication yes/PasswordAuthentication no/g;s/PermitRootLogin.*/PermitRootLogin prohibit-password/g' /etc/ssh/sshd_config
+msg_ok "Root login restricted, pass login disabled, only IPv4 set"
 
 msg_info "Disabling Subscription Nag"
 echo "DPkg::Post-Invoke { \"dpkg -V proxmox-widget-toolkit | grep -q '/proxmoxlib\.js$'; if [ \$? -eq 1 ]; then { echo 'Removing subscription nag from UI...'; sed -i '/data.status/{s/\!//;s/Active/NoMoreNagging/}' /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js; }; fi\"; };" > /etc/apt/apt.conf.d/no-nag-script
