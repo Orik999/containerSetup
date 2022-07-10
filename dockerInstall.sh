@@ -97,8 +97,8 @@ msg_ok "DOCKER_OPTS to Respect IP Table Firewall set"
 
 msg_info "Disabling ubuntu dns service (systemd-resolved.service)"
 sleep 2
-sudo systemctl stop systemd-resolved.service
-sudo systemctl disable systemd-resolved.service
+sudo systemctl stop systemd-resolved.service &>/dev/null
+sudo systemctl disable systemd-resolved.service &>/dev/null
 msg_ok "Ubuntu DNS service DISABLED (systemd-resolved.service)"
 
 # msg_info "Adding DNS Resolvers"
