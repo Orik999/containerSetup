@@ -86,9 +86,9 @@ msg_ok "Added / Corrected PVE7 Sources"
 #   update and clean
 msg_info "Updating system"
 sleep 2
-apt update &>/dev/null
-apt -y dist-upgrade &>/dev/null
-apt -y autoremove &>/dev/null
+apt update # &>/dev/null
+apt -y dist-upgrade # &>/dev/null
+apt -y autoremove # &>/dev/null
 msg_ok "System updated"
 
 msg_info "Disabling Subscription Nag"
